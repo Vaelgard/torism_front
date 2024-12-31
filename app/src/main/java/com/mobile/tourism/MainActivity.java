@@ -20,7 +20,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements PlaceAdapter.OnItemClickListener {
+
     private RecyclerView recyclerView;
     private PlaceAdapter placeAdapter;
     private ApiService apiService;
@@ -31,13 +32,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Initialize SessionManager to manage login state
         sessionManager = new SessionManager(this);
 
         // Check if the user is logged in
         if (!sessionManager.isLoggedIn()) {
-            // If not logged in, redirect to the Login activity
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
+            redirectToLogin();
             return;
         }
 
@@ -48,60 +48,78 @@ public class MainActivity extends AppCompatActivity {
         // Retrieve the token from the SessionManager
         String token = sessionManager.getToken();
 
-        // Ensure that the token is not empty or null
-        if (token != null && !token.isEmpty()) {
-            // Pass the token to ApiClient to create the ApiService instance
-            apiService = ApiClient.getClient(this).create(ApiService.class);
+        // Ensure that the token is valid
+        if (token == null || token.isEmpty()) {
+            handleMissingToken();
         } else {
-            // Handle the case where the token is missing, e.g., redirect to login
-            Toast.makeText(this, "Token is missing. Please log in again.", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
-            return;
+            // Initialize the ApiService to make network requests
+            apiService = ApiClient.getClient(this).create(ApiService.class);
+            loadPlaces();  // Load the places from the API
         }
-
-        // Call the method to load places
-        loadPlaces();
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
+        getMenuInflater().inflate(R.menu.main_menu, menu);  // Inflate the menu
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_logout) {
-            sessionManager.clearToken();
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
+            sessionManager.clearToken();  // Clear the token on logout
+            redirectToLogin();  // Redirect to login screen
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     private void loadPlaces() {
+        // Fetch the list of places from the server
         apiService.getAllPlaces(sessionManager.getToken())
                 .enqueue(new Callback<List<Place>>() {
-            @Override
-            public void onResponse(Call<List<Place>> call, Response<List<Place>> response) {
-                System.out.println("hijjdjjd");
-                System.out.println(response.body());
-                if (response.isSuccessful() && response.body() != null) {
+                    @Override
+                    public void onResponse(Call<List<Place>> call, Response<List<Place>> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            // If the request is successful, set up the adapter
+                            placeAdapter = new PlaceAdapter(response.body(), MainActivity.this);
+                            recyclerView.setAdapter(placeAdapter);
+                        } else {
+                            // Handle cases where the response is unsuccessful
+                            Toast.makeText(MainActivity.this, "Failed to load places", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Place>> call, Throwable t) {
+                        // Handle network failure
+                        Toast.makeText(MainActivity.this, "Error loading places", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    // Handle the click event on a place item
+    @Override
+    public void onItemClick(Place place) {
+        // Show a Toast or perform other actions upon clicking a place
+        Toast.makeText(this, "Clicked: " + place.getName(), Toast.LENGTH_SHORT).show();
+
+        // Navigate to PlaceDetailActivity and pass the place ID as an extra
+        Intent intent = new Intent(MainActivity.this, PlaceDetailActivity.class);
+        intent.putExtra("placeName", place.getName());  // Pass the Place ID
+        startActivity(intent);  // Start the PlaceDetailActivity
+    }
 
 
-                    System.out.println(sessionManager.getToken());
-                    placeAdapter = new PlaceAdapter(response.body());
-                    recyclerView.setAdapter(placeAdapter);
-                }
-            }
+    // Redirect to the login screen
+    private void redirectToLogin() {
+        startActivity(new Intent(this, LoginActivity.class));
+        finish();
+    }
 
-            @Override
-            public void onFailure(Call<List<Place>> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "Error loading places", Toast.LENGTH_SHORT).show();
-            }
-        });
+    // Handle the case where the token is missing
+    private void handleMissingToken() {
+        Toast.makeText(this, "Token is missing. Please log in again.", Toast.LENGTH_SHORT).show();
+        redirectToLogin();
     }
 }
