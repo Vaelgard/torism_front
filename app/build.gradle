@@ -1,0 +1,48 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.mobile.tourism'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.mobile.tourism"
+        minSdk 24
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation libs.appcompat.v170
+    implementation libs.material.v1120
+    implementation libs.activity.v172
+    implementation libs.constraintlayout.v220
+
+    // Retrofit and OkHttp
+    implementation libs.retrofit
+    implementation libs.converter.gson
+    implementation libs.okhttp
+    implementation libs.logging.interceptor
+
+    // Testing dependencies
+    testImplementation libs.junit
+    androidTestImplementation libs.junit.v121
+    androidTestImplementation libs.espresso.core.v361
+}
