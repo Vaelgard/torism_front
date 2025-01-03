@@ -5,6 +5,8 @@ public class Place {
     private String name;
     private String description;
     private String location;
+
+   private String image;
     
     // Getters and setters
 
@@ -38,5 +40,13 @@ public class Place {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

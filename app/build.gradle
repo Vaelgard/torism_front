@@ -45,4 +45,7 @@ dependencies {
     testImplementation libs.junit
     androidTestImplementation libs.junit.v121
     androidTestImplementation libs.espresso.core.v361
+    implementation 'com.github.bumptech.glide:glide:4.15.1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.15.1'
+
 }
