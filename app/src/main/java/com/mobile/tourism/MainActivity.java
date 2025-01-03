@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+import androidx.appcompat.widget.Toolbar;
+
 
 import com.mobile.tourism.adapters.PlaceAdapter;
 import com.mobile.tourism.api.ApiClient;
@@ -30,6 +32,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Set up the Toolbar
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         // Initialize SessionManager
         sessionManager = new SessionManager(this);
@@ -57,17 +63,25 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
+        getMenuInflater().inflate(R.menu.navbar_main, menu);
         return true;
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_logout) {
+        // Use if-else to handle the item selection
+        if (item.getItemId() == R.id.action_home) {
+            // If Home button is clicked, return to MainActivity
+            Intent homeIntent = new Intent(MainActivity.this, MainActivity.class);
+            startActivity(homeIntent);
+            return true;
+        } else if (item.getItemId() == R.id.action_logout) {
             sessionManager.clearToken();
             redirectToLogin();
             return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 

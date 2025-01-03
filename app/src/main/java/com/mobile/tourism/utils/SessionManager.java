@@ -6,7 +6,8 @@ import android.content.SharedPreferences;
 public class SessionManager {
     private static final String PREF_NAME = "TourismAppSession";
     private static final String KEY_TOKEN = "jwt_token";
-    
+    private static final String KEY_USER_EMAIL = "user_id";
+
     private SharedPreferences prefs;
     private SharedPreferences.Editor editor;
     private Context context;
@@ -25,6 +26,14 @@ public class SessionManager {
     public String getToken() {
         return prefs.getString(KEY_TOKEN, null);
     }
+    public void saveUserId(String userId) { // New method for saving user ID
+        editor.putString(KEY_USER_EMAIL, userId);
+        editor.apply();
+    }
+
+    public String getUserId() { // New method for retrieving user ID
+        return prefs.getString(KEY_USER_EMAIL,""); // Return -1 if not found
+    }
 
     public void clearToken() {
         editor.remove(KEY_TOKEN);
@@ -42,4 +51,4 @@ public class SessionManager {
         }
         return null;
     }
-} 
+}

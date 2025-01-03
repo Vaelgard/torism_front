@@ -74,6 +74,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     // Save the token in session and proceed to MainActivity
                     sessionManager.saveToken(response.body().getToken());
+                    sessionManager.saveUserId(email);
 
                     // Reinitialize the ApiService with the new token
                     apiService = ApiClient.getClient(LoginActivity.this).create(ApiService.class);
