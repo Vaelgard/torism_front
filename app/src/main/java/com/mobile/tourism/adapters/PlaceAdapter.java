@@ -51,6 +51,7 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ViewHolder> 
             Context context = v.getContext();
             Intent intent = new Intent(context, PlaceDetailActivity.class);
             intent.putExtra("placeId", place.getId());
+            System.out.println("intent placeId"+place.getId());
             intent.putExtra("placeName", place.getName());
             intent.putExtra("placeDescription", place.getDescription());
             intent.putExtra("placeLocation", place.getLocation());

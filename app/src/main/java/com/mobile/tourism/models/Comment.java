@@ -3,9 +3,21 @@ package com.mobile.tourism.models;
 public class Comment {
     private Long id;
     private String text;
-    private Long placeId;
+    private Integer placeId;
+    private String email;
     private int upvotes;
     private int downvotes;
+
+    public Comment(Long id, String text, Integer placeId, int upvotes, int downvotes) {
+        this.id = id;
+        this.text = text;
+        this.placeId = placeId;
+        this.upvotes = upvotes;
+        this.downvotes = downvotes;
+    }
+
+    public Comment() {
+    }
 
     public Long getId() {
         return id;
@@ -23,11 +35,11 @@ public class Comment {
         this.text = text;
     }
 
-    public Long getPlaceId() {
+    public Integer getPlaceId() {
         return placeId;
     }
 
-    public void setPlaceId(Long placeId) {
+    public void setPlaceId(Integer placeId) {
         this.placeId = placeId;
     }
 
@@ -46,5 +58,14 @@ public class Comment {
     public void setDownvotes(int downvotes) {
         this.downvotes = downvotes;
     }
-// Getters and setters
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    // Getters and setters
 } 

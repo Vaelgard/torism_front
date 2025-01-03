@@ -16,20 +16,10 @@ public interface ApiService {
     @GET("api/places")
     Call<List<Place>> getAllPlaces(@Header("Authorization") String token);
 
-    @GET("places/{id}")
-    Call<Place> getPlaceById(@Header("Authorization") String token, @Path("id") Long id);
-
-    @POST("places")
-    Call<Place> createPlace(@Header("Authorization") String token, @Body Place place);
-
-    @PUT("places/{id}")
-    Call<Place> updatePlace(@Header("Authorization") String token, @Path("id") Long id, @Body Place place);
-
-    @DELETE("places/{id}")
-    Call<Void> deletePlace(@Header("Authorization") String token, @Path("id") Long id);
-
-    @POST("comments")
+    @POST("api/comments")
     Call<Comment> addComment(@Header("Authorization") String token, @Body Comment comment);
+    @GET("api/comments/{id}")
+    Call<List<Comment>> getAllcomments(@Header("Authorization") String token, @Path("id") Integer placeId);
 
     @POST("comments/upvote/{id}")
     Call<Comment> upvoteComment(@Header("Authorization") String token, @Path("id") Long id);
