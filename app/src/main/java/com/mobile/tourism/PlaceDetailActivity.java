@@ -40,6 +40,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
     private ImageView placeImageView; // ImageView for the place
     private EditText commentEditText; // EditText for adding comments
     private Button submitCommentButton; // Button to submit the comment
+    private Button addToFavoritesButton; // Button to add to favorites
     private SessionManager sessionManager;
     private RecyclerView recyclerView;
     private ApiService apiService;
@@ -68,8 +69,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
         placeImageView = findViewById(R.id.placeImageView);
         commentEditText = findViewById(R.id.commentEditText);
         submitCommentButton = findViewById(R.id.submitCommentButton);
-        Button upvoteButton = findViewById(R.id.upvoteButton);
-        Button downvoteButton = findViewById(R.id.downvoteButton);
+        addToFavoritesButton = findViewById(R.id.addToFavoritesButton);
 
         // Retrieve data from Intent
         placeId = getIntent().getIntExtra("placeId", -1);
@@ -99,9 +99,8 @@ public class PlaceDetailActivity extends AppCompatActivity {
         // Set click listener for the submit comment button
         submitCommentButton.setOnClickListener(v -> addComment());
 
-        // Set click listeners for upvote and downvote buttons
-        upvoteButton.setOnClickListener(v -> upvotePlace());
-        downvoteButton.setOnClickListener(v -> downvotePlace());
+        // Set click listener for the add to favorites button
+        addToFavoritesButton.setOnClickListener(v -> addToFavorites());
     }
 
     private void addComment() {
@@ -129,7 +128,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Comment> call, Response<Comment> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    System.out.println("tesstt"+placeId);
+                    System.out.println("tesstt" + placeId);
                     Toast.makeText(PlaceDetailActivity.this, "Comment added successfully!", Toast.LENGTH_SHORT).show();
                     commentEditText.setText(""); // Clear the comment field
                     loadComments();
@@ -141,6 +140,28 @@ public class PlaceDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Comment> call, Throwable t) {
+                Toast.makeText(PlaceDetailActivity.this, "An error occurred", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void addToFavorites() {
+        String userEmail = sessionManager.getUserId();
+        String token = "Bearer " + sessionManager.getToken();
+
+        Call<Void> call = apiService.addToFavorites(token, placeId, userEmail);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(PlaceDetailActivity.this, "Added to favorites!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(PlaceDetailActivity.this, "Failed to add to favorites", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
                 Toast.makeText(PlaceDetailActivity.this, "An error occurred", Toast.LENGTH_SHORT).show();
             }
         });
@@ -168,40 +189,6 @@ public class PlaceDetailActivity extends AppCompatActivity {
             }
         });
     }
-    private void upvotePlace() {
-        Call<Void> call = apiService.upvotePlace(sessionManager.getToken(),placeId);
-        call.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()) {
-                    Toast.makeText(PlaceDetailActivity.this, "Upvoted!", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(PlaceDetailActivity.this, "Failed to upvote", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void downvotePlace() {
-        Call<Void> call = apiService.downvotePlace(sessionManager.getToken(),placeId);
-        call.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()) {
-                    Toast.makeText(PlaceDetailActivity.this, "Downvoted!", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(PlaceDetailActivity.this, "Failed to downvote", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -215,6 +202,14 @@ public class PlaceDetailActivity extends AppCompatActivity {
             Intent homeIntent = new Intent(PlaceDetailActivity.this, MainActivity.class);
             startActivity(homeIntent);
             return true;
+        } else if (item.getItemId() == R.id.action_favorites) {
+            Intent homeIntent = new Intent(PlaceDetailActivity.this, FavorisActivity.class);
+            startActivity(homeIntent);
+            return true;
+        }else if (item.getItemId() == R.id.action_logout) {
+            sessionManager.clearToken();
+            redirectToLogin();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -223,5 +218,4 @@ public class PlaceDetailActivity extends AppCompatActivity {
         startActivity(new Intent(this, LoginActivity.class));
         finish();
     }
-
 }

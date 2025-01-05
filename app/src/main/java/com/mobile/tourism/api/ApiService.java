@@ -38,4 +38,13 @@ public interface ApiService {
 
     @GET("/api/places/{id}")
     Call<Place> getPlaceDetails(@Header("Authorization") String token, @Path("id") Integer id);
+
+    @POST("api/places/favorite")
+    Call<Void> addToFavorites(
+            @Header("Authorization") String token,
+            @Query("placeId") Integer placeId,
+            @Query("userEmail") String userEmail
+    );
+    @GET("api/places/favorite/{userEmail}")
+    Call<List<Place>> getAllFavoritePlaces(@Header("Authorization") String token,@Path("userEmail") String userEmail);
 }
