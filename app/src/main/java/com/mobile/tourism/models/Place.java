@@ -7,6 +7,11 @@ public class Place {
     private String location;
 
    private String image;
+   private boolean voted;
+
+   private int upvotes;
+
+   private int downvotes;
     
     // Getters and setters
 
@@ -49,5 +54,29 @@ public class Place {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public boolean isVoted() {
+        return voted;
+    }
+
+    public void setVoted(boolean voted) {
+        this.voted = voted;
+    }
+
+    public int getUpvotes() {
+        return upvotes;
+    }
+
+    public void setUpvotes(int upvotes) {
+        this.upvotes = upvotes;
+    }
+
+    public int getDownvotes() {
+        return downvotes;
+    }
+
+    public void setDownvotes(int downvotes) {
+        this.downvotes = downvotes;
     }
 }

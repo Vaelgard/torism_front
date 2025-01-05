@@ -4,12 +4,16 @@ import com.mobile.tourism.models.AuthResponse;
 import com.mobile.tourism.models.LoginRequest;
 import com.mobile.tourism.models.Place;
 import com.mobile.tourism.models.Comment;
+import com.mobile.tourism.models.RegisterRequest;
 
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.*;
 
 public interface ApiService {
+
+    @POST("auth/register")
+    Call<AuthResponse> register(@Body RegisterRequest registerRequest);
     @POST("auth/login")
     Call<AuthResponse> login(@Body LoginRequest loginRequest);
 
@@ -26,4 +30,12 @@ public interface ApiService {
 
     @POST("comments/downvote/{id}")
     Call<Comment> downvoteComment(@Header("Authorization") String token, @Path("id") Long id);
+    @GET("/api/places/upvote/{id}")
+    Call<Void> upvotePlace(@Header("Authorization") String token, @Path("id") Integer id);
+
+    @GET("/api/places/downvote/{id}")
+    Call<Void> downvotePlace(@Header("Authorization") String token, @Path("id") Integer id);
+
+    @GET("/api/places/{id}")
+    Call<Place> getPlaceDetails(@Header("Authorization") String token, @Path("id") Integer id);
 }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -24,6 +25,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginButton;
     private ApiService apiService;
     private SessionManager sessionManager;
+    private TextView registerTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +35,7 @@ public class LoginActivity extends AppCompatActivity {
         emailEditText = findViewById(R.id.emailEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
         loginButton = findViewById(R.id.loginButton);
+        registerTextView= findViewById(R.id.registerTextView);
 
         sessionManager = new SessionManager(this);
 
@@ -43,6 +46,14 @@ public class LoginActivity extends AppCompatActivity {
         if (sessionManager.isLoggedIn()) {
             startMainActivity();
         }
+        registerTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
         // Set up the login button click listener
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -61,6 +72,7 @@ public class LoginActivity extends AppCompatActivity {
                 performLogin(email, password);
             }
         });
+
     }
 
     private void performLogin(String email, String password) {

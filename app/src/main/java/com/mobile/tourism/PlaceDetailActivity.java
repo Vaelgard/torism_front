@@ -1,5 +1,6 @@
 package com.mobile.tourism;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -22,6 +23,7 @@ import com.mobile.tourism.adapters.CommentsAdapter;
 import com.mobile.tourism.api.ApiClient;
 import com.mobile.tourism.api.ApiService;
 import com.mobile.tourism.models.Comment;
+import com.mobile.tourism.models.Place;
 import com.mobile.tourism.utils.SessionManager;
 
 import java.util.List;
@@ -59,7 +61,6 @@ public class PlaceDetailActivity extends AppCompatActivity {
             return;
         }
 
-
         // Initialize the views
         nameTextView = findViewById(R.id.nameTextView);
         descriptionTextView = findViewById(R.id.descriptionTextView);
@@ -67,20 +68,17 @@ public class PlaceDetailActivity extends AppCompatActivity {
         placeImageView = findViewById(R.id.placeImageView);
         commentEditText = findViewById(R.id.commentEditText);
         submitCommentButton = findViewById(R.id.submitCommentButton);
+        Button upvoteButton = findViewById(R.id.upvoteButton);
+        Button downvoteButton = findViewById(R.id.downvoteButton);
 
         // Retrieve data from Intent
-        placeId = getIntent().getIntExtra("placeId",-1);
-        if (placeId==-1){
-            System.out.println("null value");
-        }else {
-            System.out.println("value="+placeId);
-        }
+        placeId = getIntent().getIntExtra("placeId", -1);
+
         String placeName = getIntent().getStringExtra("placeName");
         String placeDescription = getIntent().getStringExtra("placeDescription");
         String placeLocation = getIntent().getStringExtra("placeLocation");
         String placeImageUrl = getIntent().getStringExtra("placeImageUrl");
-        System.out.println("place id =");
-        //load comment
+
         recyclerView = findViewById(R.id.commentsRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         apiService = ApiClient.getClient(this).create(ApiService.class);
@@ -100,6 +98,10 @@ public class PlaceDetailActivity extends AppCompatActivity {
 
         // Set click listener for the submit comment button
         submitCommentButton.setOnClickListener(v -> addComment());
+
+        // Set click listeners for upvote and downvote buttons
+        upvoteButton.setOnClickListener(v -> upvotePlace());
+        downvoteButton.setOnClickListener(v -> downvotePlace());
     }
 
     private void addComment() {
@@ -130,6 +132,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
                     System.out.println("tesstt"+placeId);
                     Toast.makeText(PlaceDetailActivity.this, "Comment added successfully!", Toast.LENGTH_SHORT).show();
                     commentEditText.setText(""); // Clear the comment field
+                    loadComments();
                 } else {
                     System.out.println("hi1");
                     Toast.makeText(PlaceDetailActivity.this, "Failed to add comment", Toast.LENGTH_SHORT).show();
@@ -162,6 +165,39 @@ public class PlaceDetailActivity extends AppCompatActivity {
             public void onFailure(Call<List<Comment>> call, Throwable t) {
                 System.out.println("test3");
                 Toast.makeText(PlaceDetailActivity.this, "Error loading comments", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void upvotePlace() {
+        Call<Void> call = apiService.upvotePlace(sessionManager.getToken(),placeId);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(PlaceDetailActivity.this, "Upvoted!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(PlaceDetailActivity.this, "Failed to upvote", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void downvotePlace() {
+        Call<Void> call = apiService.downvotePlace(sessionManager.getToken(),placeId);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(PlaceDetailActivity.this, "Downvoted!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(PlaceDetailActivity.this, "Failed to downvote", Toast.LENGTH_SHORT).show();
             }
         });
     }
