@@ -5,6 +5,7 @@ import com.mobile.tourism.models.LoginRequest;
 import com.mobile.tourism.models.Place;
 import com.mobile.tourism.models.Comment;
 import com.mobile.tourism.models.RegisterRequest;
+import com.mobile.tourism.models.ourUsers;
 
 import java.util.List;
 import retrofit2.Call;
@@ -47,4 +48,8 @@ public interface ApiService {
     );
     @GET("api/places/favorite/{userEmail}")
     Call<List<Place>> getAllFavoritePlaces(@Header("Authorization") String token,@Path("userEmail") String userEmail);
+    @GET("api/profile/getuser/{userEmail}")
+    Call<ourUsers> getUserByEmail(@Header("Authorization") String token, @Path("userEmail") String userEmail);
+    @PUT("api/profile/update/{userId}")
+    Call<ourUsers> updateUser( @Path("userId") Integer userId, @Body ourUsers updatedUser, @Header("Authorization") String token);
 }

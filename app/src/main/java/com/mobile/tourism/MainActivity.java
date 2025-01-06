@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,6 +37,9 @@ public class MainActivity extends AppCompatActivity {
         // Set up the Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.teal_700)));
+        }
 
         // Initialize SessionManager
         sessionManager = new SessionManager(this);
@@ -79,6 +83,10 @@ public class MainActivity extends AppCompatActivity {
         } else if (item.getItemId() == R.id.action_logout) {
             sessionManager.clearToken();
             redirectToLogin();
+            return true;
+        } else if (item.getItemId()==R.id.action_profile){
+            Intent profileIntent = new Intent(MainActivity.this, ProfilActivity.class);
+            startActivity(profileIntent);
             return true;
         }
 

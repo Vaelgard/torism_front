@@ -85,7 +85,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
         loadComments();
 
         // Set data to TextViews
-        nameTextView.setText("Place Name: " + (placeName != null ? placeName : "N/A"));
+        nameTextView.setText((placeName != null ? placeName : "N/A"));
         descriptionTextView.setText("Description: " + (placeDescription != null ? placeDescription : "N/A"));
         locationTextView.setText("Location: " + (placeLocation != null ? placeLocation : "N/A"));
 
@@ -209,6 +209,10 @@ public class PlaceDetailActivity extends AppCompatActivity {
         }else if (item.getItemId() == R.id.action_logout) {
             sessionManager.clearToken();
             redirectToLogin();
+            return true;
+        }else if (item.getItemId()==R.id.action_profile){
+            Intent profileIntent = new Intent(PlaceDetailActivity.this, ProfilActivity.class);
+            startActivity(profileIntent);
             return true;
         }
         return super.onOptionsItemSelected(item);

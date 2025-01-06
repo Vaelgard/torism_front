@@ -1,18 +1,28 @@
 package com.mobile.tourism.models;
 
-public class User {
-    private Long id;
+public class ourUsers {
+    private Integer id;
     private String email;
     private String password;
+    private String name;
     
     // Getters and setters
 
-    public Long getId() {
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {

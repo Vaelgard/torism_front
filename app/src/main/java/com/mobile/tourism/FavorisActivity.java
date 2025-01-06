@@ -74,6 +74,10 @@ public class FavorisActivity extends AppCompatActivity {
             sessionManager.clearToken();
             redirectToLogin();
             return true;
+        }else if (item.getItemId()==R.id.action_profile){
+            Intent profileIntent = new Intent(FavorisActivity.this, ProfilActivity.class);
+            startActivity(profileIntent);
+            return true;
         }
 
         return super.onOptionsItemSelected(item);

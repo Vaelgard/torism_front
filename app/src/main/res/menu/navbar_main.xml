@@ -11,13 +11,13 @@
     <!-- Profile -->
     <item
         android:id="@+id/action_profile"
-        android:title="Profil"
+        android:title="Profile"
         android:orderInCategory="2"
         app:showAsAction="ifRoom" />
     <!-- Home (to return to MainActivity) -->
     <item
         android:id="@+id/action_home"
-        android:title="Home"
+        android:title="Accueil"
         android:orderInCategory="4"
         app:showAsAction="ifRoom" />
 

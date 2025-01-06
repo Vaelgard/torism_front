@@ -3,40 +3,51 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
-    android:gravity="center">
+    android:padding="24dp"
+    android:gravity="center"
+    android:background="@color/light_gray">
 
     <EditText
         android:id="@+id/emailEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Email"
+        android:hint="Adresse e-mail"
         android:inputType="textEmailAddress"
-        android:layout_marginBottom="8dp" />
+        android:layout_marginBottom="12dp"
+        android:backgroundTint="@color/teal_700"
+        android:padding="12dp"
+        android:background="@drawable/rounded_edittext" />
 
     <EditText
         android:id="@+id/passwordEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Password"
+        android:hint="Mot de passe"
         android:inputType="textPassword"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="20dp"
+        android:backgroundTint="@color/teal_700"
+        android:padding="12dp"
+        android:background="@drawable/rounded_edittext" />
 
     <Button
         android:id="@+id/loginButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Login"
-        android:layout_marginBottom="16dp" />
+        android:text="Se connecter"
+        android:textColor="@android:color/white"
+        android:backgroundTint="@color/teal_700"
+        android:layout_marginBottom="20dp"
+        android:padding="12dp" />
 
     <TextView
         android:id="@+id/registerTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Don't have an account? Register"
+        android:text="Vous n'avez pas de compte ? Inscrivez-vous"
         android:textColor="@color/teal_700"
         android:textStyle="bold"
         android:layout_gravity="center"
         android:clickable="true"
         android:focusable="true" />
+
 </LinearLayout>
